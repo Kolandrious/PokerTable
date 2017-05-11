@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import pokersolver from 'pokersolver'
 import Deck from './Deck'
 import '../App.css'
 
@@ -18,60 +17,55 @@ export default class App extends Component {
     this.state = {
       hand: [],
       rank: 0,
+      animationIsGoing: false,
     }
 
     this.getRandomHand = this.getRandomHand.bind(this)
-    this.getHandRank = this.getHandRank.bind(this)
-    this.getRandomNumber = this.getRandomNumber.bind(this)
     this.getCards = this.getCards.bind(this)
   }
 
   getRandomHand() {
-    let allCards = cards.concat()
+    const allCards = cards.concat()
     const hand = []
     for (let i = 0; i < 5; i++) {
-      // const random = Math.floor(Math.random()*allCards.length - 1)
-      // console.log(random)
-      hand.push(allCards.splice(Math.floor(Math.random()*allCards.length - 1), 1)[0])
+      hand.push(allCards.splice((Math.floor(Math.random()*allCards.length) - 1), 1)[0])
     }
-    // console.log(hand)
-    this.setState(state => ({ hand }))
     return hand
   }
 
-  getHandRank(hand) {
-    // console.log(pokersolver.Hand.solve(hand).descr)
-    let rank;
-    if (pokersolver.Hand.solve(hand).descr === 'Royal Flush') {
-      rank = 9
-    } else {
-      rank = pokersolver.Hand.solve(hand).rank -1
-    }
-    this.setState(state => ({ rank }))
-    return rank
-  }
-
-
-  getRandomNumber() {
-    return Math.floor((Math.random() * 10))
-  }
-
   getCards(combination) {
-    this.getHandRank(this.getRandomHand())
+    this.setState({ hand: this.getRandomHand(), animationIsGoing: true })
   }
 
   render() {
     return (
       <div className="App">
-        <button onClick={(e) => {
-          this.getCards()
-        }} >get cards</button>
-        {this.state.hand} rank: {this.state.rank}
+        <button
+          disabled={this.state.animationIsGoing}
+          onClick={()=> { this.getCards()}}
+        >
+          get cards
+        </button>
+        <div>{this.state.hand}</div>
         <div>
-          <Deck hand={this.state.hand} rank={this.state.rank} />
+          <Deck hand={this.state.hand} completeAnimation={() => {this.setState({ animationIsGoing: false })}} animationIsGoing={this.state.animationIsGoing} />
         </div>
       </div>
     );
   }
 }
 
+
+/*  получить юзера, баланс
+    юзер устанавливает ставки, общается
+    действия на раздаче:
+      заблокировать кнопки
+      убрать карты
+      отправить на сервер данные о юзере, ставке, игре, балансе (чекнуть)
+      получить карты
+      показать карты
+      показать выигрыш
+      изменить баланс на новый, обнулить ставку
+      разблокировать кнопки
+
+*/

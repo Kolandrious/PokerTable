@@ -1,5 +1,6 @@
 {
   "name": "deckPoker",
+  "homepage": "https://kolandrious.github.io/PokerTable",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
